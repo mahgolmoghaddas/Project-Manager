@@ -5,7 +5,14 @@ import axios from "axios";
 import {
   Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions,
   TextField, Container, List, ListItem, IconButton, Card,
-  CardContent, CardActions, Grid, Chip, Box, Menu, MenuItem
+  CardContent, CardActions, Grid, Chip, Box, Menu, MenuItem,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Paper
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,20 +36,44 @@ interface State {
   forms: Form[];
 }
 
-type Action = { type: "SET_FORMS"; payload: Form[] };
+interface DataEntry {
+  id: number;
+  formId: number;
+  date: string;
+  tags: Record<string, string>;
+  value: number;
+}
 
-const initialState: State = { forms: [] };
+interface State {
+  forms: Form[];
+  data: DataEntry[]; // ✅ New state for data entries
+}
 
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "SET_FORMS":
-      return { ...state, forms: action.payload };
-    default:
-      return state;
-  }
-};
 
+
+type Action =
+  | { type: "SET_FORMS"; payload: Form[] }
+  | { type: "SET_DATA"; payload: DataEntry[] }; 
+
+
+  const initialState: State = { forms: [], data: [] };
+
+
+  const reducer = (state: State, action: Action): State => {
+    switch (action.type) {
+      case "SET_FORMS":
+        return { ...state, forms: action.payload };
+      case "SET_DATA":
+        return { ...state, data: action.payload }; // ✅ Ensures correct data structure
+      default:
+        return state;
+    }
+  };
+ 
 const App: React.FC = () => {
+
+
+  
   const [state, dispatch] = useReducer(reducer, initialState);
   const [openCreateForm, setOpenCreateForm] = useState(false);
   const [formName, setFormName] = useState("");
@@ -53,6 +84,61 @@ const App: React.FC = () => {
   const [selectedFormTag, setSelectedFormTag] = useState<Form | null>(null);
   const [newTagName, setNewTagName] = useState("");
   const [newChoices, setNewChoices] = useState("");
+  const [editForm, setEditForm] = useState<Form | null>(null);
+
+
+  const handleEditForm = (form: Form) => {
+    setEditForm(form);
+    setFormName(form.name);
+  };
+
+  const deleteTag = async (formId: number, tagName: string) => {
+    const updatedForms = state.forms.map(form => {
+      if (form.id === formId) {
+        return { ...form, tags: form.tags.filter(tag => tag.name !== tagName) };
+      }
+      return form;
+    });
+  
+    const updatedForm = updatedForms.find(form => form.id === formId);
+  
+    if (!updatedForm) return;
+  
+    try {
+      await axios.put(`${API_URL}/forms/${formId}`, updatedForm);
+      dispatch({ type: "SET_FORMS", payload: updatedForms });
+    } catch (error) {
+      console.error("Error deleting tag:", error);
+    }
+  };
+
+  const deleteForm = async (id: number) => {
+    try {
+      await axios.delete(`${API_URL}/forms/${id}`);
+      dispatch({ type: "SET_FORMS", payload: state.forms.filter(form => form.id !== id) });
+    } catch (error) {
+      console.error("Error deleting form:", error);
+    }
+  };
+  
+  // ✅ Save form name changes
+  const saveEditForm = async () => {
+    if (!editForm || !formName.trim()) return;
+
+    const updatedForm = { ...editForm, name: formName };
+
+    try {
+      await axios.put(`${API_URL}/forms/${editForm.id}`, updatedForm);
+      dispatch({
+        type: "SET_FORMS",
+        payload: state.forms.map(form => form.id === editForm.id ? updatedForm : form)
+      });
+
+      setEditForm(null);
+    } catch (error) {
+      console.error("Error updating form:", error);
+    }
+  };
   
   const handleLabelClick = (form: Form) => {
     setSelectedFormTag(form);
@@ -87,16 +173,33 @@ const App: React.FC = () => {
     }
   };
   
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await axios.get<{ data: DataEntry[] }>(`${API_URL}/data`);
+      dispatch({ type: "SET_DATA", payload: response.data.data }); // ✅ Correctly extracts data array
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, []);
 
-  // ✅ Fetch Forms & Ensure Tags Exist
+  // const fetchForms = useCallback(async () => {
+  //   const response = await axios.get<{ forms: Form[] }>(`${API_URL}/forms`);
+  //   dispatch({ type: "SET_FORMS", payload: response.data.forms }); // ✅ Now correctly extracting `.forms`
+  // }, []);
+  
+
+ // ✅ Fetch Forms & Ensure Tags Exist
   const fetchForms = useCallback(async () => {
     try {
       const response = await axios.get<Form[]>(`${API_URL}/forms`);
+      //console.log('response', updatedForms)
       const updatedForms = response.data.map(form => ({
         ...form,
         tags: form.tags ?? [],
-        label: form.label ?? "Add New Tag" // ✅ Default label added
+        label: form.label ?? "Add New Tag",
+       
       }));
+      console.log('response', updatedForms)
       dispatch({ type: "SET_FORMS", payload: updatedForms });
     } catch (error) {
       console.error("Error fetching forms:", error);
@@ -104,7 +207,11 @@ const App: React.FC = () => {
   }, []);
   
 
-  useEffect(() => { fetchForms(); }, [fetchForms]);
+  
+  useEffect(() => {
+    fetchForms();
+    fetchData(); // ✅ Fetching data alongside forms
+  }, [fetchForms, fetchData]);
 
   // ✅ Create a new form
   const createForm = async () => {
@@ -154,6 +261,7 @@ const App: React.FC = () => {
     } catch (error) {
       console.error("Error adding choice:", error);
     }
+
   };
 
   // ✅ Delete a choice from a tag & update the API
@@ -179,6 +287,7 @@ const App: React.FC = () => {
       console.error("Error deleting choice:", error);
     }
   };
+  console.log('state.data', state.data)
 
   return (
     <Container maxWidth="md" sx={{ padding: "30px", textAlign: "center" }}>
@@ -217,8 +326,14 @@ const App: React.FC = () => {
                 {/* Tags Display */}
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, justifyContent: "center", marginTop: "10px" }}>
                   {form.tags?.map((tag, index) => (
-                    <Chip key={index} label={tag.name} color="primary" onClick={(e) => handleTagClick(e, tag, form)} />
+                   <> 
+                   <Chip  key={index} label={tag.name} color="primary" onClick={(e) => handleTagClick(e, tag, form)} />
+                    <IconButton sx={{color:'blue'}} onClick={() => deleteTag(form.id, tag.name)} color="error" size="small">
+                        <DeleteIcon fontSize="small" />
+                    </IconButton>
+                      </>
                   ))}
+                  
                 </Box>
 
       {/* ✅ Dropdown for Choices */}
@@ -236,6 +351,39 @@ const App: React.FC = () => {
           <IconButton onClick={addChoiceToTag}><AddIcon /></IconButton>
         </MenuItem>
       </Menu>
+      <Box sx={{ display: "flex", justifyContent: "center", gap: 1, marginBottom: "10px" }}>
+  <IconButton onClick={() => handleEditForm(form)} color="primary">
+    <EditIcon />
+  </IconButton>
+  <IconButton onClick={() => deleteForm(form.id)} color="error">
+    <DeleteIcon />
+  </IconButton>
+</Box>
+<Typography variant="subtitle1" sx={{ marginTop: "20px", fontWeight: "bold", color: "#1976d2" }}>
+  Data Entries
+</Typography>
+<TableContainer component={Paper} sx={{ marginTop: "10px" }}>
+  <Table size="small">
+    <TableHead>
+      <TableRow>
+        <TableCell>Date</TableCell>
+        <TableCell>Tags</TableCell>
+        <TableCell>Value</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+  {(state.data ?? []) // ✅ Ensure data is an array even if it's initially undefined
+    .filter(entry => entry.formId === form.id)
+    .map((entry) => (
+      <TableRow key={entry.id}>
+        <TableCell>{entry.date}</TableCell>
+        <TableCell>{entry.value}</TableCell>
+      </TableRow>
+    ))}
+</TableBody>
+
+  </Table>
+</TableContainer>
 
               </CardContent>
             </Card>
@@ -284,6 +432,19 @@ const App: React.FC = () => {
                 <Button onClick={addNewTag} color="primary" variant="contained">Add Tag</Button>
               </DialogActions>
             </Dialog>
+)}
+
+{editForm && (
+  <Dialog open={Boolean(editForm)} onClose={() => setEditForm(null)}>
+    <DialogTitle>Edit Form</DialogTitle>
+    <DialogContent>
+      <TextField fullWidth label="Form Name" value={formName} onChange={(e) => setFormName(e.target.value)} margin="normal" />
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={() => setEditForm(null)}>Cancel</Button>
+      <Button onClick={saveEditForm} color="primary" variant="contained">Save</Button>
+    </DialogActions>
+  </Dialog>
 )}
 
       {/* Create Form Dialog */}
