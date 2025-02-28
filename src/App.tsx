@@ -40,8 +40,8 @@ interface DataEntry {
   id: number;
   formId: number;
   date: string;
-  tags: Record<string, string>;
-  value: number;
+  tags: string;
+  value: string;
 }
 
 interface State {
@@ -51,9 +51,12 @@ interface State {
 
 
 
+
 type Action =
   | { type: "SET_FORMS"; payload: Form[] }
-  | { type: "SET_DATA"; payload: DataEntry[] }; 
+  | { type: "SET_DATA"; payload: DataEntry[] }
+  | { type: "ADD_DATA"; payload: DataEntry }
+  | { type: "DELETE_DATA"; payload: number };
 
 
   const initialState: State = { forms: [], data: [] };
@@ -62,9 +65,13 @@ type Action =
   const reducer = (state: State, action: Action): State => {
     switch (action.type) {
       case "SET_FORMS":
+        //console.log('state', state)
         return { ...state, forms: action.payload };
       case "SET_DATA":
+        //console.log('data', state.data)
         return { ...state, data: action.payload }; // ✅ Ensures correct data structure
+        case "ADD_DATA":
+          return { ...state, data: [...state.data, action.payload] }; 
       default:
         return state;
     }
@@ -82,10 +89,55 @@ const App: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedForm, setSelectedForm] = useState<Form | null>(null);
   const [selectedFormTag, setSelectedFormTag] = useState<Form | null>(null);
+  const [selectedFormData, setSelectedFormData] = useState<Form | null>(null);
   const [newTagName, setNewTagName] = useState("");
   const [newChoices, setNewChoices] = useState("");
   const [editForm, setEditForm] = useState<Form | null>(null);
+  const [newDate, setNewDate] = useState("");
+  const [newTags, setNewTags] = useState<string | "">("");
+  const [newValue, setNewValue] = useState<string | "">("");
 
+
+  
+  // ✅ Open modal to add data
+const openAddDataModal = (form: Form) => {
+  console.log('log!!!', form)
+  setSelectedFormData(form);
+  setNewDate("");
+  setNewTags("");
+  setNewValue("");
+};
+
+// ✅ Add new data entry
+const addDataEntry = async () => {
+  if (!selectedForm || !newDate || newValue === "") return;
+
+  const newEntry: DataEntry = {
+    id: state.data.length + 1, // ✅ Auto-increment ID
+    formId: selectedForm.id || 0, // ✅ Links to correct form
+    date: newDate,
+    tags: newTags,
+    value: newValue,
+  };
+
+
+  try {
+    const response = await axios.post<DataEntry>(`${API_URL}/data`, newEntry);
+    dispatch({ type: "ADD_DATA", payload: response.data });
+    setSelectedForm(null);
+  } catch (error) {
+    console.error("Error adding data entry:", error);
+  }
+};
+
+const deleteDataEntry = async (id: number) => {
+  try {
+    await axios.delete(`${API_URL}/data/${id}`);
+    dispatch({ type: "DELETE_DATA", payload: id });
+  } catch (error) {
+    console.error("Error deleting data:", error);
+  }
+};
 
   const handleEditForm = (form: Form) => {
     setEditForm(form);
@@ -175,12 +227,14 @@ const App: React.FC = () => {
   
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get<{ data: DataEntry[] }>(`${API_URL}/data`);
-      dispatch({ type: "SET_DATA", payload: response.data.data }); // ✅ Correctly extracts data array
+      const response = await axios.get<DataEntry[]>(`${API_URL}/data`);
+      console.log('response.dataa', response.data)
+      dispatch({ type: "SET_DATA", payload: response.data }); // ✅ Correctly extracts data array
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }, []);
+
 
   // const fetchForms = useCallback(async () => {
   //   const response = await axios.get<{ forms: Form[] }>(`${API_URL}/forms`);
@@ -192,7 +246,7 @@ const App: React.FC = () => {
   const fetchForms = useCallback(async () => {
     try {
       const response = await axios.get<Form[]>(`${API_URL}/forms`);
-      //console.log('response', updatedForms)
+      
       const updatedForms = response.data.map(form => ({
         ...form,
         tags: form.tags ?? [],
@@ -373,18 +427,28 @@ const App: React.FC = () => {
     </TableHead>
     <TableBody>
   {(state.data ?? []) // ✅ Ensure data is an array even if it's initially undefined
-    .filter(entry => entry.formId === form.id)
-    .map((entry) => (
-      <TableRow key={entry.id}>
-        <TableCell>{entry.date}</TableCell>
-        <TableCell>{entry.value}</TableCell>
+    .filter(entry => entry.formId == form.id)
+    .map((e) => (
+      <>
+      <TableRow key={e.id}>
+      <TableCell>{e.date}</TableCell>
+      <TableCell>{JSON.stringify(e.tags)}</TableCell>
+      <TableCell >{e.value}</TableCell>
+      <TableCell>
+        <IconButton onClick={() => deleteDataEntry(e.id)} color="error">
+          <DeleteIcon />
+        </IconButton>
+      </TableCell>
       </TableRow>
+              </>
     ))}
 </TableBody>
 
   </Table>
 </TableContainer>
-
+              <Button onClick={() => openAddDataModal(form)} variant="contained" color="primary" sx={{ marginTop: "10px" }}>
+                                Add Data
+              </Button>
               </CardContent>
             </Card>
           </Grid>
@@ -458,7 +522,24 @@ const App: React.FC = () => {
           <Button onClick={createForm} color="primary" variant="contained">Create</Button>
         </DialogActions>
       </Dialog>
+
+
+          <Dialog open={Boolean(selectedFormData)} onClose={() => setSelectedFormData(null)}>
+            <DialogTitle>Add Data Entry</DialogTitle>
+            <DialogContent>
+              <TextField fullWidth label="Date" type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} margin="normal" />
+              <TextField fullWidth label="Tag" value={newTags} onChange={(e) => setNewTags(e.target.value)} margin="normal" />
+              <TextField fullWidth label="Value" type="text" value={newValue} onChange={(e) => setNewValue(e.target.value)} margin="normal" />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setSelectedFormData(null)}>Cancel</Button>
+              <Button onClick={addDataEntry} color="primary" variant="contained">Add Entry</Button>
+            </DialogActions>
+          </Dialog>
+
     </Container>
+
+    
   );
 };
 

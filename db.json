@@ -8,9 +8,7 @@
           "name": "Type",
           "choices": [
             "Waste",
-            "Recyclable",
-            "Organic waste",
-            "34gf24"
+            "Recyclable"
           ]
         },
         {
@@ -18,6 +16,12 @@
           "choices": [
             "efw",
             "happy"
+          ]
+        },
+        {
+          "name": "new tag",
+          "choices": [
+            "password"
           ]
         }
       ],
@@ -164,6 +168,13 @@
         "Type": "Bus"
       },
       "value": 833
+    },
+    {
+      "id": 5,
+      "formId": "2",
+      "date": "2025-02-27",
+      "tags": "sdwef",
+      "value": "wefwef"
     }
   ]
 }
