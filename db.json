@@ -16,55 +16,33 @@
         {
           "name": "Hello",
           "choices": [
-            "efw"
+            "efw",
+            "happy"
           ]
-        },
-        {
-          "name": "adfvadf",
-          "choices": []
         }
       ],
       "label": "efw"
     },
     {
-      "id": "31f3",
-      "name": "placeholder",
+      "id": "f51d",
+      "name": "Magod",
+      "tags": [],
+      "label": "Add New Tag"
+    },
+    {
+      "id": "5cb1",
+      "name": "efqeefwqed",
       "tags": [
         {
-          "name": "Type",
+          "name": "wefwdf",
           "choices": [
-            "Waste",
-            "Compost",
-            "Recyclable",
-            "Organic waste"
-          ]
-        },
-        {
-          "name": "Zone",
-          "choices": [
-            "Residential",
-            "Commercial",
-            "Industrial"
-          ]
-        },
-        {
-          "name": "wfwef",
-          "choices": [
-            "wefwef",
-            "afa"
+            "aq",
+            "cd",
+            "qeFAdf"
           ]
         }
       ],
       "label": "Add New Tag"
-    },
-    {
-      "id": "f51d",
-      "name": "Magol",
-      "tags": []
-    },
-    {
-      "id": "5cb1",
-      "name": "efqe"
     },
     {
       "id": "1f4d",
@@ -77,7 +55,10 @@
       "tags": [
         {
           "name": "notagaefqed",
-          "choices": []
+          "choices": [
+            "haze",
+            "srvgsdv"
+          ]
         },
         {
           "name": "dfqwefwef",
@@ -85,7 +66,8 @@
             "EWWEFWEF"
           ]
         }
-      ]
+      ],
+      "label": "Add New Tag"
     },
     {
       "id": "d514",
@@ -129,6 +111,18 @@
       "id": "f849",
       "name": "wrgwgf",
       "tags": []
+    },
+    {
+      "id": "758d",
+      "name": "The first one",
+      "tags": [
+        {
+          "name": "new tag1",
+          "choices": [
+            "type"
+          ]
+        }
+      ]
     }
   ],
   "data": [
