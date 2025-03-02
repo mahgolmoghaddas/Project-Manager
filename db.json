@@ -1,180 +1,58 @@
 {
   "forms": [
     {
-      "id": "2",
-      "name": "Public transpor usage (Tickets)",
+      "id": 1,
+      "name": "Residual materials pick-ups (kg)",
       "tags": [
         {
           "name": "Type",
-          "choices": [
-            "Waste",
-            "Recyclable"
-          ]
+          "choices": ["Waste", "Compost", "Recyclable", "Organic waste"]
         },
         {
-          "name": "Hello",
-          "choices": [
-            "efw",
-            "happy"
-          ]
-        },
-        {
-          "name": "new tag",
-          "choices": [
-            "password"
-          ]
-        }
-      ],
-      "label": "efw"
-    },
-    {
-      "id": "f51d",
-      "name": "Magod",
-      "tags": [],
-      "label": "Add New Tag"
-    },
-    {
-      "id": "5cb1",
-      "name": "efqeefwqed",
-      "tags": [
-        {
-          "name": "wefwdf",
-          "choices": [
-            "aq",
-            "cd",
-            "qeFAdf"
-          ]
-        }
-      ],
-      "label": "Add New Tag"
-    },
-    {
-      "id": "1f4d",
-      "name": "mahgol",
-      "tags": []
-    },
-    {
-      "id": "a6c8",
-      "name": "sdfsf",
-      "tags": [
-        {
-          "name": "notagaefqed",
-          "choices": [
-            "haze",
-            "srvgsdv"
-          ]
-        },
-        {
-          "name": "dfqwefwef",
-          "choices": [
-            "EWWEFWEF"
-          ]
-        }
-      ],
-      "label": "Add New Tag"
-    },
-    {
-      "id": "d514",
-      "name": "Magol",
-      "tags": [
-        {
-          "name": "efw",
-          "choices": [
-            "weff",
-            "swgwef",
-            "gggf"
-          ]
+          "name": "Zone",
+          "choices": ["Residential", "Commercial", "Industrial"]
         }
       ]
     },
     {
-      "id": "bc2e",
-      "name": "wfewef",
+      "id": 2,
+      "name": "Public transport usage (Tickets)",
       "tags": [
         {
-          "name": "qefqef",
-          "choices": [
-            "wrefgwrgfw"
-          ]
-        },
-        {
-          "name": "qefqef",
-          "choices": [
-            "wrefgwrgfw"
-          ]
-        }
-      ],
-      "label": "Add New Tag"
-    },
-    {
-      "id": "41d9",
-      "name": "Joshua",
-      "tags": []
-    },
-    {
-      "id": "f849",
-      "name": "wrgwgf",
-      "tags": []
-    },
-    {
-      "id": "758d",
-      "name": "The first one",
-      "tags": [
-        {
-          "name": "new tag1",
-          "choices": [
-            "type"
-          ]
+          "name": "Type",
+          "choices": ["Bus", "Metro", "Train"]
         }
       ]
     }
   ],
   "data": [
     {
-      "id": "1",
+      "id": 1,
       "formId": 1,
       "date": "2024-01-01",
-      "tags": {
-        "Type": "Waste",
-        "Zone": "Residential"
-      },
+      "tags": { "Type": "Waste", "Zone": "Residential" },
       "value": 130
     },
     {
-      "id": "2",
+      "id": 2,
       "formId": 1,
       "date": "2024-02-01",
-      "tags": {
-        "Type": "Compost",
-        "Zone": "Residential"
-      },
+      "tags": { "Type": "Compost", "Zone": "Residential" },
       "value": 345
     },
     {
-      "id": "3",
+      "id": 3,
       "formId": 1,
       "date": "2024-01-01",
-      "tags": {
-        "Type": "Waste",
-        "Zone": "Commercial"
-      },
+      "tags": { "Type": "Waste", "Zone": "Commercial" },
       "value": 234
     },
     {
-      "id": "4",
+      "id": 4,
       "formId": 2,
       "date": "2024-01-01",
-      "tags": {
-        "Type": "Bus"
-      },
+      "tags": { "Type": "Bus" },
       "value": 833
-    },
-    {
-      "id": 5,
-      "formId": "2",
-      "date": "2025-02-27",
-      "tags": "sdwef",
-      "value": "wefwef"
     }
   ]
 }
