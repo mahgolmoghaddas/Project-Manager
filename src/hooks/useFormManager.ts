@@ -19,7 +19,7 @@ export const useFormManager = () => {
         tags: form.tags ?? [],
         label: form.label ?? "Add New Tag",
       }));
-      console.log("response", updatedForms);
+      
       dispatch({ type: "SET_FORMS", payload: updatedForms });
     } catch (error) {
       console.error("Error fetching forms:", error);
@@ -30,7 +30,7 @@ export const useFormManager = () => {
   const fetchData = useCallback(async () => {
     try {
       const response = await axios.get<DataEntry[]>(`${API_URL}/data`);
-      console.log("response.dataa", response.data);
+      
       dispatch({ type: "SET_DATA", payload: response.data }); // ✅ Correctly extracts data array
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -65,7 +65,6 @@ export const useFormManager = () => {
   };
 
   const saveEditForm = async (updatedForm:Form, editForm:Form) => {
-    console.log("updatedForm", updatedForm);
     try {
       await axios.put(`${API_URL}/forms/${editForm.id}`, updatedForm);
       dispatch({
@@ -107,7 +106,7 @@ export const useFormManager = () => {
     try {
       const response = await axios.put<Tag>(`${API_URL}/forms/${formId}/tags/${updatedTag.name}`, updatedTag);
       dispatch({ type: "EDIT_TAG", payload: { formId, updatedTag } });
-      console.log("✏️ Tag updated successfully:", response.data);
+      console.log("response.data", response.data);
     } catch (error) {
       console.error(error);
     }
@@ -118,7 +117,7 @@ export const useFormManager = () => {
     try {
       const response = await axios.put<DataEntry>(`${API_URL}/data/${updatedEntry.id}`, updatedEntry);
       dispatch({ type: "EDIT_DATA", payload: response.data });
-      console.log("✏️ Data entry updated successfully:", response.data);
+      console.log("response.data", response.data);
     } catch (error) {
       console.error(error);
     }
@@ -176,7 +175,6 @@ export const useFormManager = () => {
   };
 
   const deleteDataEntry = async (id: string) => {
-    //console.log('id', id)
    
 
     try {
@@ -184,7 +182,6 @@ export const useFormManager = () => {
       console.log("response", response);
       if (response.status === 200 || response.status === 204) {
         dispatch({ type: "DELETE_DATA", payload: id });
-        console.log("Deleted entry with ID:", id);
       } else {
         console.error("Error deleting data: Unexpected response", response);
       }

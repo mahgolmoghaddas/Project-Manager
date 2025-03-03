@@ -6,8 +6,6 @@ import { DataEntry, Form, Tag } from "./types";
 interface FormListProps {
   state: { forms: Form[], data: DataEntry[] };
   onEditClick: (item: Tag, formId: string) => void;
-  onDeleteTag: (formId: string, tagName: string) => void;
-  onOpenAddTag: (formId: string) => void;
   editTag: (formId: string, updatedTag: Tag) => void;
   editDataEntry: (updatedEntry: DataEntry) => void
   addForm: (newForm:object) => void
@@ -24,8 +22,8 @@ interface FormListProps {
   editChoiceTag:(updatedForm: Form,selectedForm: Form) => void
 }
 
-const FormList: React.FC<FormListProps> = ({ state,addNewTag,deleteDataEntry,saveEditTag,editChoiceTag,addDataEntry,saveEditEntry,addChoiceToTag,deleteChoiceFromTag, saveEditForm ,deleteTag, onOpenAddTag, editDataEntry, addForm, deleteForm }) => {
-    console.log(state)
+const FormList: React.FC<FormListProps> = ({ state,addNewTag,deleteDataEntry,saveEditTag,editChoiceTag,addDataEntry,saveEditEntry,addChoiceToTag,deleteChoiceFromTag, saveEditForm ,deleteTag, addForm, deleteForm }) => {
+
   const [editForm, setEditForm] = useState<Form | null>(null);
     const [tagValue, setTagValue] = useState<string>("");
   const [openCreateForm, setOpenCreateForm] = useState(false);
@@ -64,9 +62,8 @@ const FormList: React.FC<FormListProps> = ({ state,addNewTag,deleteDataEntry,sav
 
   const editFormHandler=() =>{
     if (!editForm || !formName.trim()) return;
-    //
     const updatedForm = { ...editForm, name: formName };
-    console.log("updatedForm", updatedForm);
+    
     saveEditForm(updatedForm, editForm)
     setEditForm(null);
   }
@@ -90,7 +87,6 @@ const FormList: React.FC<FormListProps> = ({ state,addNewTag,deleteDataEntry,sav
 
   const handleLabelClick = (form: Form) => {
     setSelectedFormTag(form);
-    console.log(selectedFormTag);
     setNewTagName("");
     setNewChoices("");
   };
@@ -308,13 +304,13 @@ const addChoice=()=>{
                     <DeleteIcon />
                   </IconButton>
                 </Box>
-              {/* Form Name */}
+
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {form.name}
               </Typography>
 
 
-              {/* Add Tag Button */}
+
               <Box
                 sx={{
                   background: "#1976d2",
@@ -337,9 +333,6 @@ const addChoice=()=>{
                 Add Tag
                 </Typography>
               </Box>
-
-              {/* Tags List */}
-                             {/* Tags Display */}
                              <Box
                   sx={{
                     display: "flex",
@@ -433,12 +426,12 @@ const addChoice=()=>{
       <Typography>{choice}</Typography>
     )}
 
-    {/* Edit Choice Button */}
+
     <IconButton onClick={() => startEditingChoice(index, choice)} color="primary">
       <EditIcon />
     </IconButton>
 
-    {/* Delete Choice Button */}
+
     <IconButton onClick={() => deleteChoice(index)} color="error">
       <DeleteIcon />
     </IconButton>
@@ -457,7 +450,7 @@ const addChoice=()=>{
       </MenuItem>
       </Menu>
 
-                {/*The Table*/}
+
                 <Typography
                   variant="subtitle1"
                   sx={{
