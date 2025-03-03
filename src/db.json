@@ -39,15 +39,8 @@
     },
     {
       "id": "3",
-      "name": "Form3",
-      "tags": [
-        {
-          "name": "Type",
-          "choices": [
-            "Idk"
-          ]
-        }
-      ]
+      "name": "NewTagg",
+      "tags": []
     }
   ],
   "data": [
@@ -91,22 +84,40 @@
       "value": 833
     },
     {
-      "id": "8",
+      "id": "5",
       "formId": "3",
-      "date": "2025-02-26",
+      "date": "2025-03-13",
       "tags": {
-        "Type": "wGEGERGERGFERGERG"
+        "Type": "NewForm6"
       },
-      "value": 22322
+      "value": 111
     },
     {
-      "id": "9",
+      "id": "6",
       "formId": "3",
-      "date": "2025-03-07",
+      "date": "2025-01-08",
       "tags": {
-        "Type": "R"
+        "Type": "NewForm4"
       },
       "value": 2
+    },
+    {
+      "id": "7",
+      "formId": "3",
+      "date": "2025-01-08",
+      "tags": {
+        "Type": "NewForm4"
+      },
+      "value": 4
+    },
+    {
+      "id": "8",
+      "formId": "3",
+      "date": "2025-01-08",
+      "tags": {
+        "Type": "NewForm4"
+      },
+      "value": "116"
     }
   ]
 }
