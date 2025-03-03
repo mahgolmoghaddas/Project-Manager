@@ -1,58 +1,112 @@
 {
   "forms": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Residual materials pick-ups (kg)",
       "tags": [
         {
           "name": "Type",
-          "choices": ["Waste", "Compost", "Recyclable", "Organic waste"]
+          "choices": [
+            "Waste",
+            "Compost",
+            "Recyclable",
+            "Organic waste"
+          ]
         },
         {
           "name": "Zone",
-          "choices": ["Residential", "Commercial", "Industrial"]
+          "choices": [
+            "Residential",
+            "Commercial",
+            "Industrial"
+          ]
         }
       ]
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Public transport usage (Tickets)",
       "tags": [
         {
           "name": "Type",
-          "choices": ["Bus", "Metro", "Train"]
+          "choices": [
+            "Bus",
+            "Metro",
+            "Train"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Form3",
+      "tags": [
+        {
+          "name": "Type",
+          "choices": [
+            "Idk"
+          ]
         }
       ]
     }
   ],
   "data": [
     {
-      "id": 1,
+      "id": "1",
       "formId": 1,
       "date": "2024-01-01",
-      "tags": { "Type": "Waste", "Zone": "Residential" },
+      "tags": {
+        "Type": "Waste",
+        "Zone": "Residential"
+      },
       "value": 130
     },
     {
-      "id": 2,
+      "id": "2",
       "formId": 1,
       "date": "2024-02-01",
-      "tags": { "Type": "Compost", "Zone": "Residential" },
+      "tags": {
+        "Type": "Compost",
+        "Zone": "Residential"
+      },
       "value": 345
     },
     {
-      "id": 3,
+      "id": "3",
       "formId": 1,
       "date": "2024-01-01",
-      "tags": { "Type": "Waste", "Zone": "Commercial" },
+      "tags": {
+        "Type": "Waste",
+        "Zone": "Commercial"
+      },
       "value": 234
     },
     {
-      "id": 4,
+      "id": "4",
       "formId": 2,
       "date": "2024-01-01",
-      "tags": { "Type": "Bus" },
+      "tags": {
+        "Type": "Bus"
+      },
       "value": 833
+    },
+    {
+      "id": "8",
+      "formId": "3",
+      "date": "2025-02-26",
+      "tags": {
+        "Type": "wGEGERGERGFERGERG"
+      },
+      "value": 22322
+    },
+    {
+      "id": "9",
+      "formId": "3",
+      "date": "2025-03-07",
+      "tags": {
+        "Type": "R"
+      },
+      "value": 2
     }
   ]
 }
