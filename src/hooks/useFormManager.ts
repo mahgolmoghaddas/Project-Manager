@@ -109,7 +109,7 @@ export const useFormManager = () => {
       dispatch({ type: "EDIT_TAG", payload: { formId, updatedTag } });
       console.log("✏️ Tag updated successfully:", response.data);
     } catch (error) {
-      console.error("❌ Error editing tag:", error);
+      console.error(error);
     }
   };
 
@@ -120,7 +120,7 @@ export const useFormManager = () => {
       dispatch({ type: "EDIT_DATA", payload: response.data });
       console.log("✏️ Data entry updated successfully:", response.data);
     } catch (error) {
-      console.error("❌ Error editing data entry:", error);
+      console.error(error);
     }
   };
 
@@ -236,5 +236,20 @@ export const useFormManager = () => {
     }
   };
 
-  return { state,deleteTag,saveEditForm,addNewTag,deleteDataEntry,addDataEntry,saveEditTag,saveEditEntry,addChoiceToTag,deleteChoiceFromTag, dispatch, editTag, editDataEntry, addForm, deleteForm };
+  const editChoiceTag = async (selectedForm:Form, updatedForm: Form)=>{
+    try {
+      await axios.put(`${API_URL}/forms/${selectedForm.id}`, updatedForm);
+      dispatch({
+        type: "SET_FORMS",
+        payload: state.forms.map((form) =>
+          form.id === selectedForm.id ? updatedForm : form
+        ),
+      });
+      
+    } catch (error) {
+      console.error(error);
+    } 
+
+  }
+  return { state,deleteTag,saveEditForm,addNewTag,deleteDataEntry,editChoiceTag,addDataEntry,saveEditTag,saveEditEntry,addChoiceToTag,deleteChoiceFromTag, dispatch, editTag, editDataEntry, addForm, deleteForm };
 };

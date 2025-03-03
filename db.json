@@ -8,8 +8,8 @@
           "name": "Type",
           "choices": [
             "Waste",
-            "Compost",
-            "Recyclable",
+            "Compostq",
+            "Recyclablea",
             "Organic waste"
           ]
         },
@@ -21,7 +21,8 @@
             "Industrial"
           ]
         }
-      ]
+      ],
+      "label": "Add New Tag"
     },
     {
       "id": "2",
@@ -40,14 +41,8 @@
     {
       "id": "3",
       "name": "Form3",
-      "tags": [
-        {
-          "name": "Type",
-          "choices": [
-            "Idk"
-          ]
-        }
-      ]
+      "tags": [],
+      "label": "Add New Tag"
     }
   ],
   "data": [

@@ -21,9 +21,10 @@ interface FormListProps {
   addDataEntry: (newEntry: DataEntry) => void
   saveEditEntry: (editEntry: DataEntry) => void
   saveEditTag: (editTag: Tag, selectedFormId: string) => void
+  editChoiceTag:(updatedForm: Form,selectedForm: Form) => void
 }
 
-const FormList: React.FC<FormListProps> = ({ state,addNewTag,deleteDataEntry,saveEditTag,addDataEntry,saveEditEntry,addChoiceToTag,deleteChoiceFromTag, saveEditForm ,deleteTag, onOpenAddTag, editDataEntry, addForm, deleteForm }) => {
+const FormList: React.FC<FormListProps> = ({ state,addNewTag,deleteDataEntry,saveEditTag,editChoiceTag,addDataEntry,saveEditEntry,addChoiceToTag,deleteChoiceFromTag, saveEditForm ,deleteTag, onOpenAddTag, editDataEntry, addForm, deleteForm }) => {
     console.log(state)
   const [editForm, setEditForm] = useState<Form | null>(null);
     const [tagValue, setTagValue] = useState<string>("");
@@ -44,6 +45,8 @@ const FormList: React.FC<FormListProps> = ({ state,addNewTag,deleteDataEntry,sav
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedForm, setSelectedForm] = useState<Form | null>(null);
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
+  const [editChoiceIndex, setEditChoiceIndex] = useState<number | null>(null);
+  const [editedChoice, setEditedChoice] = useState<string>("");
 
   
   const handleClose = () => {
@@ -68,7 +71,10 @@ const FormList: React.FC<FormListProps> = ({ state,addNewTag,deleteDataEntry,sav
     setEditForm(null);
   }
 
-
+  const startEditingChoice = (index: number, choice: string) => {
+    setEditChoiceIndex(index);
+    setEditedChoice(choice);
+  };
 
 
 
@@ -198,6 +204,8 @@ const addChoice=()=>{
         : tag,
     );
 
+
+    
     const updatedForm = { ...selectedForm, tags: updatedTags };
 
     deleteChoiceFromTag(updatedForm, selectedForm)
@@ -206,6 +214,20 @@ const addChoice=()=>{
       );
     setAnchorEl(null)
   }
+
+  const editChoice = (index: number) => {
+    if (!selectedTag || !selectedForm) return;
+
+{    const updatedTags = selectedForm.tags.map((tag) =>
+      tag.name === selectedTag.name
+        ? { ...tag, choices: tag.choices.map((c, i) => (i === index ? editedChoice : c)) }
+        : tag
+    );
+  
+    const updatedForm = { ...selectedForm, tags: updatedTags };
+    editChoiceTag(selectedForm, updatedForm)}
+    
+  };
 
   const newTag =()=>{
     if (!selectedFormTag || !newTagName.trim()) return;
@@ -397,15 +419,32 @@ const addChoice=()=>{
         </Dialog>
       )}
     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        {selectedTag?.choices?.map((choice, index) => (
-          <MenuItem key={index}>
-            {choice}
-            <IconButton onClick={() => deleteChoice(index)}>
-              <DeleteIcon />
-            </IconButton>
-          </MenuItem>
-          
-        ))}<MenuItem>
+    {selectedTag?.choices?.map((choice, index) => (
+  <MenuItem key={index} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+    {editChoiceIndex === index ? (
+      <TextField
+        size="small"
+        value={editedChoice}
+        onChange={(e) => setEditedChoice(e.target.value)}
+        onBlur={() => editChoice(index)}
+        autoFocus
+      />
+    ) : (
+      <Typography>{choice}</Typography>
+    )}
+
+    {/* Edit Choice Button */}
+    <IconButton onClick={() => startEditingChoice(index, choice)} color="primary">
+      <EditIcon />
+    </IconButton>
+
+    {/* Delete Choice Button */}
+    <IconButton onClick={() => deleteChoice(index)} color="error">
+      <DeleteIcon />
+    </IconButton>
+  </MenuItem>
+))}
+        <MenuItem>
         <TextField
           value={newChoice}
           onChange={(e) => setNewChoice(e.target.value)}

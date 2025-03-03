@@ -7,7 +7,7 @@ import FormList from "./FormList";
 
 
 const App: React.FC = () => {
-  const {state, editTag,saveEditForm,deleteTag,addChoiceToTag, addDataEntry,saveEditEntry,saveEditTag,addNewTag ,deleteChoiceFromTag,deleteDataEntry ,editDataEntry, addForm, deleteForm } = useFormManager();
+  const {state, editTag,saveEditForm,deleteTag,addChoiceToTag, editChoiceTag,addDataEntry,saveEditEntry,saveEditTag,addNewTag ,deleteChoiceFromTag,deleteDataEntry ,editDataEntry, addForm, deleteForm } = useFormManager();
   const [editItem, setEditItem] = useState<Tag | DataEntry | null>(null);
 
 
@@ -44,6 +44,7 @@ const App: React.FC = () => {
           addChoiceToTag={addChoiceToTag}
           deleteTag={deleteTag}
           saveEditTag={saveEditTag}
+          editChoiceTag={editChoiceTag}
           addDataEntry={addDataEntry}
           deleteDataEntry={deleteDataEntry}
           deleteChoiceFromTag={deleteChoiceFromTag}
