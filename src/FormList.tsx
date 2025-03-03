@@ -6,8 +6,6 @@ import { DataEntry, Form, Tag } from "./types";
 interface FormListProps {
   state: { forms: Form[], data: DataEntry[] };
   onEditClick: (item: Tag, formId: string) => void;
-  onDeleteTag: (formId: string, tagName: string) => void;
-  onOpenAddTag: (formId: string) => void;
   editTag: (formId: string, updatedTag: Tag) => void;
   editDataEntry: (updatedEntry: DataEntry) => void
   addForm: (newForm:object) => void
@@ -24,7 +22,7 @@ interface FormListProps {
   editChoiceTag:(updatedForm: Form,selectedForm: Form) => void
 }
 
-const FormList: React.FC<FormListProps> = ({ state,addNewTag,deleteDataEntry,saveEditTag,editChoiceTag,addDataEntry,saveEditEntry,addChoiceToTag,deleteChoiceFromTag, saveEditForm ,deleteTag, onOpenAddTag, editDataEntry, addForm, deleteForm }) => {
+const FormList: React.FC<FormListProps> = ({ state,addNewTag,deleteDataEntry,saveEditTag,editChoiceTag,addDataEntry,saveEditEntry,addChoiceToTag,deleteChoiceFromTag, saveEditForm ,deleteTag, addForm, deleteForm }) => {
     console.log(state)
   const [editForm, setEditForm] = useState<Form | null>(null);
     const [tagValue, setTagValue] = useState<string>("");
